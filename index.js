@@ -81,6 +81,7 @@ async function run() {
       res.send(result);
     });
 
+    // Product Related APIs
     //Create Product
     app.post("/products", async (req, res) => {
       const newProduct = req.body;
@@ -94,6 +95,12 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+
+    app.get('/latest-products',async(req,res)=>{
+      const cursor = productsCollection.find().sort({created_at: -1}).limit(6)
+      const result = await cursor.toArray()
+      res.send(result)
+    })
 
     //Read/Get a Specific Product
     app.get("/products/:id", async (req, res) => {
