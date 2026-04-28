@@ -105,7 +105,7 @@ async function run() {
     //Read/Get a Specific Product
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
+      const query = { _id: id };
       const result = await productsCollection.findOne(query);
       res.send(result);
     });
@@ -141,9 +141,8 @@ async function run() {
     });
 
     app.get("/bids", async (req, res) => {
-      const email = req.query.email;
       const query = {};
-      if (email) {
+      if (query.email) {
         query.buyer_email = email;
       }
 
@@ -151,6 +150,15 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+
+    app.get('/products/bids/:productId', async(req,res)=>{
+      const productId = req.params.productId
+      const query = {product : productId}
+      const cursor = bidsCollection.find(query).sort({bid_price: -1})
+      const result = await cursor.toArray()
+      res.send(result)
+    })
+
 
     app.get("/bids/:id", async (req, res) => {
       const id = req.params.id;
